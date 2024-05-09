@@ -1,0 +1,27 @@
+\documentclass[11pt,fleqn,twoside,openright]{extbook}
+
+% load document layout
+\include{config/config}
+
+\title{P2000T SD-kaart handleiding}
+\author{Ivo Filot}
+\date{February 2020}
+
+\begin{document}
+
+\mainmatter
+
+\dominitoc
+\tableofcontents
+
+\input{chapters/01-inleiding}
+\input{chapters/02-gebruik}
+\input{chapters/03-onderhoud-en-updates}
+\input{chapters/04-werking-cartridge}
+
+\appendix
+\renewcommand\chaptername{Appendix }
+\input{chapters/0A-technical-details}
+\input{chapters/0B-schematics}
+
+\end{document}

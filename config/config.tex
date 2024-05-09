@@ -1,0 +1,157 @@
+\usepackage[utf8]{luainputenc}
+
+\input{config/colors.tex}
+
+% use special 6x9 in style (US Trade)
+% the paperwidth and height need to be increased slightly to comply
+% with the standard of Lulu.com (0.125" added to each side)
+\usepackage[
+    margin          = 0.75in, 
+    paperwidth      = 6.25in, 
+    paperheight     = 9.25in,
+    bindingoffset   = 0.25in,
+    layoutvoffset   = 0.125in,
+    asymmetric
+]{geometry}
+
+% mathematics
+\usepackage{amsmath,amsfonts,amssymb,amsthm,commath,amsgen,mathtools,scalerel,textcomp,siunitx}
+
+% load fonts
+\usepackage{microtype}
+\usepackage{fontspec}
+
+% include fontawesome
+\usepackage{fontawesome}
+
+\DeclareCharacterInheritance
+   { encoding = {TU,EU1,EU2},
+     family   = {ScalaOT} }
+   { A = {\`A,\'A,\^A,\~A,\"A,\r A},
+     a = {\`a,\'a,\^a,\~a,\"a,\r a},
+     C = {\c C},
+     c = {\c c},
+     D = {\DH},
+     d = {\dj},
+     E = {\`E,\'E,\^E,\"E},
+     e = {\`e,\'e,\^e,\"e},
+     I = {\`I,\'I,\^I,\"I},
+     i = {\`i,\'i,\^i,\"i,\i},
+     L = {\L},
+     l = {\l},
+     N = {\~N},
+     n = {\~n},
+     O = {\O,\`O,\'O,\^O,\~O,\"O},
+     o = {\o,\`o,\'o,\^o,\~o,\"o},
+     S = {\v S},
+     s = {\v s},
+     U = {\`U,\'U,\^U,\"U},
+     u = {\`u,\'u,\^u,\"u},
+     Y = {\'Y,\"Y},
+     y = {\'y,\"y},
+     Z = {\v Z},
+     z = {\v z}
+   }
+
+\usepackage[math-style=ISO]{unicode-math}
+\usepackage{lualatex-math}
+
+\setmonofont{PressStart}[
+    UprightFont    =  prstartk.ttf,
+    Scale          =  MatchLowercase,
+    Path           =  fonts/
+]
+\setmainfont{ScalaSansOT}[
+    UprightFont    =  ScalaSansOT.otf,
+    BoldFont       =  ScalaSansOT-Bold.otf,
+    ItalicFont     =  ScalaSansOT-Light.otf,
+    BoldItalicFont =  ScalaSansOT-Black.otf,
+    Scale          =  MatchLowercase,
+    Path           =  fonts/
+]
+
+% set page style
+\usepackage{fancyhdr}
+\input{config/pagestyle}
+
+% use tikz
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{pgfplots}
+\pgfplotsset{width=4.0cm}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{patterns}
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc,positioning}
+\usetikzlibrary{shapes.misc,calc}
+\usepackage{relsize}
+\tikzset{fontscale/.style = {font=\relsize{#1}}}
+
+\input{config/sectionstyling}
+
+\setlength{\parindent}{0em}
+
+% prints all figures before making a new section
+\usepackage[section]{placeins}
+
+% use for Tables
+\usepackage{array}
+
+% specialty code to have fixed columns with ragged right text
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% caption styling
+\usepackage[font=small, textfont=it, labelfont=bf]{caption}
+
+% clickable links
+\usepackage[hidelinks]{hyperref}
+
+% references
+\usepackage[capitalise,dutch,nameinlink]{cleveref}
+
+% use landscape
+\usepackage{lscape}
+
+% use chemical species
+\usepackage[version=4]{mhchem}
+
+% prettier tables
+\usepackage{booktabs}
+
+% force table placement
+\usepackage{float}
+
+% greek in text
+\usepackage{upgreek}
+
+% si units
+\usepackage{siunitx}
+
+% tikz
+\usepackage{tikz}
+
+% \minuso
+\usepackage{stmaryrd}
+
+% miller indices
+\usepackage{miller}
+\renewcommand{\millerskip}{}
+
+% icons
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\usepackage[parfill]{parskip}
+
+% use a different package for enumeration and iteration
+\usepackage{enumitem}
+
+% avoid pagebreaks in footnotes
+\usepackage{bigfoot}
+
+\usepackage{listings}
+\usepackage{afterpage}
+\usepackage{wrapfig}
+
+\include{config/commands}

@@ -1,0 +1,45 @@
+%
+% CHAPTER STYLING
+%
+
+%
+% Numberless chapters (i.e. for Appendix)
+%
+\titleformat
+{name=\chapter,numberless}              % command
+[display]                               % shape
+{\Huge\bfseries\ttfamily\color{white}}  %format
+{}
+{-1in}
+{}
+
+% decrease title spacing
+\titlespacing*{\chapter}{0pt}{-50pt}{10pt}
+
+%
+% MINIMALISTIC CHAPTER STYLE
+%
+
+\newcommand{\chapnumfont}{%     % define font for chapter number
+  \ttfamily
+  \fontsize{64}{64}
+  \selectfont
+}
+
+\titleformat{\chapter}[display]
+{\filleft\bfseries}
+{
+\color{white}\ttfamily \Large \MakeUppercase{\chaptername} \fontsize{128}{128}\selectfont \thechapter
+}
+{0pt}
+{
+\color{white}\Huge\bfseries\ttfamily\uppercase
+}
+
+\newcommand{\chapterpreamble}{%
+    \pagecolor{primarycol}\afterpage{\nopagecolor}
+    \arrayrulecolor{white}
+    \minitoc
+    \arrayrulecolor{black}
+    \newpage
+}

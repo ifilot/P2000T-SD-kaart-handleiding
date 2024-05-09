@@ -1,0 +1,178 @@
+%
+% PURPOSE
+% *******
+% 
+% Set custom styling for the table of contents, the
+% 
+
+% additional style files
+\usepackage{titlesec}
+\usepackage{textpos}
+\usepackage{calc}
+
+% table of contents per chapter
+\usepackage{titletoc}
+\usepackage{minitoc}
+\setlength{\mtcindent}{0pt}
+
+\setcounter{tocdepth}{2}
+\setcounter{minitocdepth}{6}
+
+%---------------------------------------------------------------
+% MAIN TABLE OF CONTENTS
+%---------------------------------------------------------------
+
+\contentsmargin{0cm} % Removes the default margin
+
+% % Part text styling
+% \titlecontents{part}[0cm]
+% {\addvspace{20pt}\large\bfseries}
+% {}
+% {}
+% {}
+
+% use English hyphenation
+\usepackage[dutch]{babel}
+
+\addto{\captionsdutch}{% Making babel aware of special titles
+  \renewcommand{\mtctitle}{Inhoud}
+}
+\renewcommand{\mtifont}{\large\color{white}\ttfamily}
+\renewcommand{\mtcfont}{\small\color{white}\ttfamily}
+\renewcommand{\mtcSfont}{\small\color{white}\ttfamily}
+\renewcommand{\mtcSSfont}{\small\color{white}\ttfamily}
+\renewcommand{\mtcSSSfont}{\small\color{white}\ttfamily}
+\makeatletter
+\def\mtc@bottom@rule{%
+  \ifx\mtc@rule\relax\relax\else
+      \vskip -2.5ex
+        \color{white}\rule[2.4\p@]{\columnwidth}{.4\p@}\vspace*{2.6\p@}\fi}    
+\makeatother
+
+\usepackage{subcaption}
+\usepackage[subfigure]{tocloft}
+\setlength{\cftbeforetoctitleskip}{-10pt} % but use different settings for Table of Contents
+\setlength{\cftaftertoctitleskip}{0pt} % but use different settings for Table of Contents
+
+% change TOC font
+\renewcommand{\cfttoctitlefont}{\hfill\Huge\ttfamily}
+
+% since we are using Babel, we have to use this work-around for the TOC name
+\addto\captionsenglish{\renewcommand{\contentsname}{Table of Contents}}
+
+% Chapter text styling
+\titlecontents{chapter}[0.0cm] % Indentation
+{\addvspace{12pt}\ttfamily\bfseries\color{primarycol}} % Spacing and font options for chapters
+{\contentslabel[\thecontentslabel]{0.75cm}} % Chapter number
+{}  
+{\normalsize\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+
+% Section text styling
+\titlecontents{section}[1.25cm] % Indentation
+{\addvspace{3pt}\ttfamily\mdseries} % Spacing and font options for sections
+{\contentslabel[\thecontentslabel]{1.25cm}} % Section number
+{}
+{\normalsize\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+[]
+
+% Subsection text styling
+\titlecontents{subsection}[3.00cm] % Indentation
+{\addvspace{1pt}\ttfamily\small} % Spacing and font options for subsections
+{\contentslabel[\thecontentslabel]{1.75cm}} % Subsection number
+{}
+{\ \titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+[]
+
+% Subsubsection text styling
+\titlecontents{subsubsection}[1.5cm] % Indentation
+{\addvspace{1pt}\ttfamily\footnotesize} % Spacing and font options for subsections
+{\contentslabel[\thecontentslabel]{1.5cm}} % Subsection number
+{}
+{\ \titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+[]
+
+% List of figures
+\titlecontents{figure}[0em]
+{\addvspace{-5pt}\ttfamily}
+{\thecontentslabel\hspace*{1em}}
+{}
+{\ \titlerule*[.5pc]{.}\;\thecontentspage}
+[]
+
+% List of tables
+\titlecontents{table}[0em]
+{\addvspace{-5pt}\ttfamily}
+{\thecontentslabel\hspace*{1em}}
+{}
+{\ \titlerule*[.5pc]{.}\;\thecontentspage}
+[]
+
+%---------------------------------------------------------------
+%   MINI TABLE OF CONTENTS IN PART HEADS
+%---------------------------------------------------------------
+
+% Chapter text styling
+\titlecontents{lchapter}[0em] % Indenting
+{\addvspace{15pt}\large\ttfamily\bfseries} % Spacing and font options for chapters
+{\color{black!80}\contentslabel[\Large\thecontentslabel]{1.25cm}\color{black!80}} % Chapter number
+{}  
+{\color{black!80}\normalsize\ttfamily\bfseries\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+
+% Section text styling
+\titlecontents{lsection}[0em] % Indenting
+{\ttfamily\small} % Spacing and font options for sections
+{\contentslabel[\thecontentslabel]{1.25cm}} % Section number
+{}
+{}
+
+% Subsection text styling
+\titlecontents{lsubsection}[.5em] % Indentation
+{\normalfont\footnotesize\ttfamily} % Font settings
+{}
+{}
+{}
+
+%
+% CHAPTER FORMATTING
+%
+
+\input{config/chapter}
+
+%---------------------------------------------------------------
+%   SECTION NUMBERING IN THE MARGIN
+%---------------------------------------------------------------
+
+\makeatletter
+
+% section
+\renewcommand{\@seccntformat}[1]{\llap{\textcolor{primarycol}{\csname the#1\endcsname}\hspace{1em}}}                    
+\renewcommand{\section}{\@startsection{section}{1}{\z@}
+{-4ex \@plus -1ex \@minus -.4ex}
+{1ex \@plus.2ex }
+{\normalfont\ttfamily\bfseries}}
+
+% subsection
+\renewcommand{\subsection}{\@startsection {subsection}{2}{\z@}
+{-3ex \@plus -0.1ex \@minus -.4ex}
+{0.5ex \@plus.2ex }
+{\small\ttfamily\bfseries}}
+
+% subsubsection
+\renewcommand{\subsubsection}{\@startsection {subsubsection}{3}{\z@}
+{-2ex \@plus -0.1ex \@minus -.2ex}
+{.2ex \@plus.2ex }
+{\small\ttfamily\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}
+{-2ex \@plus-.2ex \@minus .2ex}
+{.1ex}
+{\small\ttfamily\bfseries}}
+
+%
+% Special mathematics commands
+%
+
+\usepackage{esdiff}
+\usepackage{bm}
+
+\newcommand{\D}[1]
+{\mathop{\mathrm{\mathstrut d}#1}}
