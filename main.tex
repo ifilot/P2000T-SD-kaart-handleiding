@@ -9,19 +9,28 @@
 
 \begin{document}
 
-\mainmatter
-
+% frontmatter
+\frontmatter
+\input{chapters/00-colofon}
+\cleardoublepage
 \dominitoc
 \tableofcontents
 
+% main matter
+\mainmatter
 \input{chapters/01-inleiding}
 \input{chapters/02-gebruik}
 \input{chapters/03-onderhoud-en-updates}
 \input{chapters/04-werking-cartridge}
 
+% appendix
 \appendix
 \renewcommand\chaptername{Appendix }
 \input{chapters/0A-technical-details}
 \input{chapters/0B-schematics}
 
+% add index to the document
+\chapter{Index}
+\pagecolor{primarycol}\afterpage{\nopagecolor}
+\printindex
 \end{document}

@@ -27,12 +27,15 @@ De \product is een set van twee cartridges waarmee SD-kaartjes uitgelezen kunnen
 %
 \section{Cartridges}
 
-De \product is een set van twee cartridges: een \sleuf{1} en \sleuf{2} cartridge. De \sleuf{1} cartridge heeft aan de voorzijde een DIP schakelaar, de \sleuf{2} cartridge heeft aan de voorzijde 4 LED-lampjes. Over het algemeen wordt de \sleuf{1} cartridge geleverd met een zwart-oranje behuizing en de \sleuf{2} cartridge met een zwart-witte behuizing.
+De \product is een set van twee cartridges: een \sleuf{1} en \sleuf{2} cartridge. De \sleuf{1} cartridge heeft aan de voorzijde een DIP schakelaar, de \sleuf{2} cartridge heeft aan de voorzijde 4 LED-lampjes\index{LED-lampjes}. Over het algemeen wordt de \sleuf{1} cartridge geleverd met een zwart-oranje behuizing en de \sleuf{2} cartridge met een zwart-witte behuizing.
 
 %
 %
 %
 \subsection{Sleuf 1 cartridge}
+
+\index{Sleuf 1 cartridge}
+\index{SLOT 1 cartridge|see{Sleuf 2 cartridge}}
 
 Cartridge 1 (zwart-oranje) is een \sleuf{1} multirom cartridge (zie \cref{fig:cartridge-sleuf1}) waarbij de gebruiker middels een DIP schakelaar aan de voorzijde van de cartridge de gewenste ROM kan selecteren.
 
@@ -57,6 +60,9 @@ De cartridge bevat een 64 KiB ROM chip waardoor op deze (enkele) cartridge de in
 %
 \subsection{Sleuf 2 cartridge}
 
+\index{Sleuf 2 cartridge}
+\index{SLOT 2 cartridge|see{Sleuf 2 cartridge}}
+
 Cartridge 2 (zwart / wit) is een \sleuf{2} cartridge (zie \cref{fig:cartridge-sleuf2}) met de benodigde schakelingen zodat de \pkb{P2000T} kan communiceren met het SD kaartje. Deze cartridge bevat naast een SD-kaart houder, ook een 128 KiB ROM chip (SST39SF010) en een 128 KiB RAM chip (62128). De ROM chip wordt gebruikt om de firmware op te slaan terwijl de RAM chip gebruikt wordt als buffer zodat grote stukken data opgeslagen kunnen worden zonder het interne geheugen van de \pkb{P2000T}, welke vaak relatief beperkt is, te belasten.
 
 \begin{figure}[h!]
@@ -80,6 +86,9 @@ Aan de voorzijde van de cartridge bevinden zich 4 LED-lampjes. Deze geven de lop
 %
 \section{Broncode, schema's en licentie}
 
-De \product is een volledig open-source en open-hardware product. De bronbestanden om de PCBs te fabriceren en de broncode voor de software zijn te verkrijgen via deze Github repository:\\ \url{https://github.com/ifilot/p2000t-sdcard/}.
+\index{licentie}
+\index{broncode}
+
+De \product is een volledig open-source en open-hardware product. De bronbestanden om de PCBs te fabriceren en de broncode voor de software zijn te verkrijgen via deze Github repository:\\ \faGithub \;\url{https://github.com/ifilot/p2000t-sdcard/}.
 
 De software wordt gedistribueerd onder een GPLv3\footnote{\url{https://www.gnu.org/licenses/gpl-3.0.en.html}} licentie. De hardware valt onder een CC-BY-SA\footnote{\url{https://creativecommons.org/licenses/by-sa/4.0/deed.en}} licentie.

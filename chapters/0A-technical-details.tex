@@ -9,6 +9,9 @@
 
 Over het algemeen worden getallen met zogeheten decimale notatie gedefinieerd. Decimale notatie is een vorm van positionele notatie waarbij de positie van het getal de orde van grootheid (enen, tienen, honderden, enz.) aangeeft. Binnen elke positie lopen de getallen van 0-9. Een alternatief voor decimale notatie, welke zich bij uitstek leent voor de informatiekunde, is hexadecimale notatie. Hierin heeft elke positie niet 10 getallen (\pkb{0-9}), maar 16 (\pkb{0x0-0xF}), waarbij \pkb{0xA} voor 10 staat, \pkb{0xB} voor 11, tot en met \pkb{0xF} voor 15. Om onderscheid te maken tussen decimale en hexadecimale getallen wordt de affix \pkb{0x} gebruikt. Kortom, begint een getal met \pkb{0x}, dan wordt hexadecimale notatie gebruikt.
 
+\index{hexadecimale notatie}
+\index{0x|see{hexadecimale notatie}}
+
 Het grote voordeel van hexadecimale notatie is dat elk quartet aan 4 bits, welke in totaal $2^{4} = 16$ unieke waarde kan bevatten, een uniek hexadecimaal getal heeft. Voor een byte van 8 bits, heb je dus 2 hexadecimale getallen nodig waarbij elk van deze getallen tot zijn eigen quartet aan bits behoort. Er is dus een makkelijke correspondentie tussen de posities van de bits an de positie van de hexadecimale getallen.
 
 Ter illustratie, de adresbus van de \pkb{P2000T} gebruikt 16 bits wat dus een adresruimte geeft van $2^{16} = 65536$ bytes, oftewel 64 KiB. In hexadecimaal zou dit \pkb{0xFFFF} zijn. Een stukje geheugen van 1 KiB is dan \pkb{0x400} en 4 KiB is \pkb{0x1000}. De eerste 4 KiB van een P2000T zijn gereserveerd voor de monitor, welke zich dus in adresruimte \pkb{0x0000-0x0FFF} bevindt. Het cartridgegeheugen is \pkb{0x1000-0x4FFF}, het videogeheugen \pkb{0x5000-0x5FFF} en tenslotte staat het overige RAM geheugen (zonder geheugenuitbreidingen) in \pkb{0x6000-0x9FFF}.
@@ -23,6 +26,9 @@ In \cref{tab:hexconv1,tab:hexconv2} staat een overzicht van de conversie tussen 
 \section{Endianness}
 \label{sec:endianness}
 
+\index{bytevolgorde|see{endianness}}
+\index{endianness}
+
 Onder endianness of bytevolgorde verstaat men in de informatica de manier waarop getallen, die zelf uit meerdere bytes bestaan, in het computergeheugen worden opgeslagen. Het gaat daarbij om de volgorde in het geheugen van de bytes die samen een woord vormen. Wordt de meest significante byte het eerst geschreven, dan spreekt men van big-endian; schrijft men juist de minst significante byte eerst, dan van little-endian. \pkb{Z80} systemen gebruiken little-endian notitie. Het getal \pkb{0x6547} wordt in het geheugen opgeslagen door eerst \pkb{0x47} op te slaan en dan \pkb{0x65}. Dit is in contrast met modernere computerarchitecturen zoals \textbf{x86-64} welke big-endian zijn.
 
 Er zitten verschillende voor- en nadelen aan het gebruik van little endian. Een voorbeeld van een voordeel is dat ongeacht het aantal bits in een getal ($8, 16, 32, \cdots$), het geheugenadres altijd hetzelfde blijft. Wanneer er dus een 16-bit getal in het geheugen staat en een conversie naar 8-bit nodig is, dan kan men simpelweg eerder stoppen met lezen. Bij een big-endian systeem zouden extra instructies nodig zijn om de conversie te bewerkstelliggen.
@@ -32,6 +38,10 @@ Er zitten verschillende voor- en nadelen aan het gebruik van little endian. Een 
 %
 \section{CRC-16 checksum}
 \label{sec:crc16-checksum}
+
+\index{crc-16}
+\index{checksum}
+\index{cyclic redundancy check|see{crc-16}}
 
 Een cyclic redundancy check (CRC) is een foutdetectiecode die dikwijls gebruikt wordt in digitale netwerken en opslagmedia om bitfouten te detecteren. Blokken data die deze systemen binnenkomen, krijgen een korte controlewaarde of ``checksum'' gebaseerd op de rest bij een ``deling met rest'' op de data. Bij het binnenhalen of lezen van de data wordt de ``deling met rest'' wederom uitgevoerd, als daar dezelfde rest uitkomt zijn de data zeer waarschijnlijk correct. Blijken de data echter niet correct te zijn, dan kunnen deze via foutcorrectie hersteld worden.
 
@@ -44,6 +54,10 @@ Het algoritme dat door de \product gebruikt wordt is overgenomen uit deze bron: 
 %
 \section{Notatie binaire veelvouden}
 \label{sec:prefixes_binary_multiples}
+
+\index{binaire veelvouden}
+\index{KiB|see{binaire veelvouden}}
+\index{MiB|see{binaire veelvouden}}
 
 In de beschrijving van bestandsgroottes is het gebruikelijk om binaire veelvouden te gebruiken in plaats van de conventionele decimale veelvouden zoals we kennen vanuit het SI systeem. Neem als voorbeeld een megabyte. In het SI systeem staat ``mega'' voor $10^{6}$ en dus zou een megabyte gelijk staan een 1 miljoen bytes. Een kilobyte staat dus voor $10^{3}$ bytes, oftewel duizend bytes. Ondanks dat de International Electrotechnical Commission (IEC) in 1998 een duidelijke standaard heeft neergezet, wordt deze standaard nog verre van breed geadopteerd. Zo staat een kilobyte gelijk aan 1024 bytes op Windows, maar gelijk aan 1000 bytes op een Mac. Om elke vorm van verwarring te voorkomen maak ik onderscheid tussen SI prefixes (K voor kilo, M voor mega) en IEC prefixes voor binaire veelvouden.
 
