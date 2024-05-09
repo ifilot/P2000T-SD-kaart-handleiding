@@ -34,46 +34,111 @@ Tenslotte heeft de \sleuf{2} cartridge vier LED-lampjes. De bovenste twee LED-la
 \section{Geheugenmodel}
 \label{sec:memory-model}
 
-De \product gaat uit van verschillende geheugenmodellen van de \pkb{P2000T}. Een overzicht van deze modellen is weergegeven in \cref{fig:memory-models}. De meest basale variant omvat de zogehete ``kale'' \pkb{P2000T} welke 16 KiB aan geheugen heeft. Dit is de meest beperkende configuratie en bepaalt feitelijk de bovenste limiet van de grootte van de firmware. In deze configuratie plaatst de monitor de top van de stack op \pkb{0x9FFF}. De programmatuur van de \product wordt geplaatst op \pkb{0x7000-0x9CFF} en mag dus maximaal $11520$ bytes beslaan.
+De \product gaat uit van verschillende geheugenmodellen van de \pkb{P2000T}. Een overzicht van deze modellen is weergegeven in \cref{fig:memory-models}. De meest basale variant omvat de zogeheten ``kale'' \pkb{P2000T} welke 16 KiB aan geheugen heeft. Dit is de meest beperkende configuratie en bepaalt feitelijk de bovenste limiet van de grootte van de firmware.\footnote{Het doel is namelijk dat de firmware werkt op alle varianten van de \pkb{P2000T} en niet alleen op modellen met een geheugenuitbreiding.} In deze configuratie plaatst de monitor\footnote{De monitor is het stukje code in \pkb{0x0000-0x0FFF} dat o.a. routines bevat voor het toetsenbord, de monitor en het tapedeck. Men kan de monitor zien als de ``BIOS'' van de \pkb{P2000T}.} de top van de stack op \pkb{0x9FFF}. De programmatuur van de \product wordt geplaatst op \pkb{0x7000-0x9CFF} en mag dus maximaal $11520$ bytes beslaan.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.99\textwidth]{img/memory_models.png}
-    \caption{Geheugenmodellen van de \pkb{P2000T}.}
+    \caption{Geheugenmodellen van de \pkb{P2000T}. De onderste \pkb{0x1000} bytes behoren tot de monitor. Het geheugen van de \sleuf{1} cartridge wordt geplaatst op \pkb{0x1000-0x4FFF}. Hierna volgt het videogeheugen op \pkb{0x5000-0x5FFF}. Al het geheugen hierboven is RAM geheugen. De monitor plaatst de stack altijd aan de top van het beschikbare RAM geheugen. Afgezien van eventuele ``bank switching'' mogelijkheden is het maximale RAM geheugen van een \pkb{P2000T} 40 KiB.}
     \label{fig:memory-models}
 \end{figure}
 
-In de iets uitgebreidere scenario heeft de \pkb{P2000T} een 16 KiB geheugenuitbreiding en in totaal dus 32 KiB geheugen. Hierdoor wordt het geheugenbereik \pkb{0xA000-0xDFFF} beschikbaar en plaatst de monitor de top van de stack op \pkb{0xDFFF}. De extra 16 KiB aan geheugen kunnen gebruikt worden om \pkb{PRG} programma's op te starten. Deze stand-alone programma's worden geplaatst op \pkb{0xA000-0xDCFF} en hebben hun eigen stack (van maximaal 512 bytes) waarvan de top geplaatst is op \pkb{0xDEFF}. Deze positie zorgt ervoor dat de programma's niet interfereren met de \pkb{BASIC} stack.
+In de iets uitgebreidere scenario heeft de \pkb{P2000T} een 16 KiB geheugenuitbreiding en in totaal dus 32 KiB geheugen. Hierdoor wordt het geheugenbereik \pkb{0xA000-0xDFFF} beschikbaar en plaatst de monitor de top van de stack op \pkb{0xDFFF}. De extra 16 KiB aan geheugen kunnen gebruikt worden om \prg programma's op te starten. Deze stand-alone programma's worden geplaatst op \pkb{0xA000-0xDCFF} en hebben hun eigen stack (van maximaal 512 bytes) waarvan de top geplaatst is op \pkb{0xDEFF}. Deze positie van de stack zorgt ervoor dat de programma's niet kunnen interfereren met de \basic stack.
 
-In het meest uitgebreide scenario is ook het geheugenbereik \pkb{0xE000-0xFFFF} en wordt de top van de \pkb{BASIC} stack op \pkb{0xFFFF} geplaatst. Veelal beschikt de \pkb{P2000T} dan ook over ``bank switching'' waarbij het bovenste 8 KiB geheugenblok uitgewisseld kan worden voor een ander blok om zo nog meer geheugen aan te kunnen spreken. \pkb{PRG} programma's die gebruik willen maken van \pkb{0xE000-0xFFFF} en de mogelijkheid tot bank switching moeten zorgdragen dat deze operaties niet interfereren met de \pkb{BASIC} stack. Dit kan bijvoorbeeld door de bank met de \pkb{BASIC} stack eerst uit te wisselen voor een andere bank (of meer).
+In het meest uitgebreide scenario is ook het geheugenbereik \pkb{0xE000-0xFFFF} beschikbaar en wordt de top van de \basic stack op \pkb{0xFFFF} geplaatst. Veelal beschikt de \pkb{P2000T} dan ook over ``bank switching'' waarbij het bovenste 8 KiB geheugenblok uitgewisseld kan worden voor een ander blok om zo nog meer geheugen aan te kunnen spreken. \prg programma's die gebruik willen maken van \pkb{0xE000-0xFFFF} en de mogelijkheid tot bank switching moeten zorgdragen dat deze operaties niet interfereren met de \basic stack. Dit kan bijvoorbeeld door de bank met de \basic stack eerst uit te wisselen voor een andere bank.
 
 %
 %
 %
-\section{Opstartprocedure}
+\section{Opstartprocedures}
 
-Om \pkb{CAS} bestanden in te kunnen laden en af te spelen heeft de \product een \pkb{BASIC} omgeving nodig. Om die reden moeten de \pkb{BASIC} routines beschikbaar zijn in het geheugenbereik \pkb{0x1000-0x4FFF}. Omdat de \pkb{BASIC} cartridge niet volledig gevuld is, is er nog plaats over om een reeks aan (assembly) routines toe te voegen vanaf \pkb{0x4EC7}. Hier worden de routines geplaatst om de ROM chip op de \sleuf{2} uit te kunnen lezen en de firmware te kopiëren naar het interne RAM geheugen van de \pkb{P2000T}. Normaal gesproken wordt tijdens de \pkb{BASIC} boot op \pkb{0x1F71} een oproep gedaan naar adres \pkb{0x1056}, dat een sprong naar adres \pkb{0x1F5A} bevat. Deze oproep wordt gekaapt door de adres-pointer te veranderen op \pkb{0x1057-0x1058} naar \pkb{0x4EE0}, waar de inlaad-routines staan.
+%
+%
+\subsection{CAS bestanden}
 
-\begin{lstlisting}[caption=Vector tabel in BASIC]
-...
-jp $1548               ;$1053
-jp $1f5a               ;$1056
-jp $174f               ;$1059
-...
-\end{lstlisting}
+Om \cas bestanden in te kunnen laden en af te spelen heeft de \product een \basic omgeving nodig in het geheugenbereik \pkb{0x1000-0x4FFF}. Deze \basic omgeving wordt ingeladen via de \sleuf{1} cartridge, volledig in lijn hoe deze ook normaliter ingeladen wordt. Er zijn echter wel enkele aanpassingen aan deze \basic versie gedaan zodat deze bij het opstarten niet meteen naar de \basic prompt toe gaat, maar juist de \launcher inlaadt van de \sleuf{2} ROM in het interne geheugen en deze opstart. Een diagram van het verloop is weergeven in \cref{fig:loading-cas-file}.
 
-\begin{lstlisting}[caption=Aangepaste vector tabel in BASIC]
-...
-jp $1548               ;$1053
-jp $4ee0               ;$1056
-jp $174f               ;$1059
-...
-\end{lstlisting}
+\begin{figure}[h!]
+    \centering
 
-Het kleine stukje code dat wordt ingevoegd op \pkb{0x4EE0} slaat tevens de waarde \pkb{0x55} op op het geheugenadres \pkb{0x6150} (dat vrij is om te gebruiken). Wanneer deze waarde aanwezig is, wordt een andere gekaapte geheugenroutine geactiveerd. Deze routine is vrij klein en bevindt zich op \pkb{0x4CE7}. Hier wordt gecontroleerd of geheugenadres \pkb{0x6150} de waarde \pkb{0x55} bevat, en indien zo, dan wordt een sprong gemaakt naar \pkb{0x6151} waar een aangepaste pointer geplaatst kan worden naar elk gewenst stukje code dat moet worden uitgevoerd.
+    \tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=3em, minimum width=6em, rounded corners,
+    text width=4.5cm, align=center]
 
-Samengevat, met deze aanpassingen kan tijdens de \pkb{BASIC} boot procedure het proces omgeleid worden waardoor de firmware ingeladen wordt in het interne geheugen en opgestart wordt. Voor de exacte details kan het beste gekeken worden naar de originele broncode welke gevonden kan worden middels onderstaande link:\\
-\url{https://github.com/ifilot/p2000t-sdcard/tree/master/basicmod}.
+    \tikzset{every picture/.style=thick}
+    
+    \begin{tikzpicture}[auto, node distance=1.5cm,>=latex']
+        \node [draw, circle, fill=primarycol] (start) {\color{white}START};
+        \node [block, below of=start] (node0) {\ttfamily\faDownload\;BASIC};
+        \node [block, below of=node0] (node1) {\ttfamily\;LAUNCHER\\\faCopy\;ROM $\longmapsto$ eRAM};
+        \node [block, below of=node1] (node2) {\ttfamily \faCogs\;LAUNCHER};
+        \node [block, below of=node2] (node3) {\faMousePointer\;Gebruiker kiest programma};
+        \node [block, below of=node3] (node4) {\ttfamily CAS\\\faCopy\;SD $\longmapsto$ eRAM};
+        \node [block, below of=node4] (trash) {\ttfamily \faTrash iRAM};        
+        \node [block, below of=trash] (node5) {\ttfamily CAS\\\faCopy\;eRAM $\longmapsto$ iRAM};
+        \node [block, below of=node5] (node6) {\ttfamily\faCogs\;CAS};
+        \node [draw, circle, fill=primarycol, below of=node6] (stop) {\color{white}STOP};
+    
+           
+        \draw [->] (start) -- (node0);
+        \draw [->] (node0) -- (node1);
+        \draw [->] (node1) -- (node2);
+        \draw [->] (node2) -- (node3);
+        \draw [->] (node3) -- (node4);
+        \draw [->] (node4) -- (trash);
+        \draw [->] (trash) -- (node5);
+        \draw [->] (node5) -- (node6);
+        \draw [->] (node6) -- (stop);
+    
+    \end{tikzpicture}
+    \caption{Opstartprocedure van \cas bestanden. De betekenis van de symbolen zijn als volgt: \faDownload \; opstarten vanaf cartridge, \faCopy \; kopiëren van data, \faCogs \; uitvoeren van machinecode, \faMousePointer \; gebruikersinvoer, \faTrash - wissen geheugen. iRAM en eRAM staan respectievelijk voor het interne en externe (cartridge) RAM geheugen. ROM staat voor het \sleuf{2} ROM geheugen.}
+    \label{fig:loading-cas-file}
+\end{figure}
+
+Het opstarten van de \launcher resulteert in het verschijnen van een gebruikersinterface waarmee de gebruiker de SD-kaart kan navigeren en het gewenste programma kan inladen en uitvoeren (\cref{chap:usage}). Bij het uitkiezen van een \cas bestand wordt de programmadata gekopieerd naar het externe RAM geheugen van de cartridge. Hierbij wordt meteen alle metadata (de header informatie) gestript. Uit deze metadata wordt enkel nog de programmagrootte en het plaatsingsadres opgeslagen.
+
+De \launcher wordt nu uit het geheugen gehaald om plaats te maken voor het \cas programma. Het programma wordt, gebruikmakende van de opgeslagen metadata, gekopieerd van het externe RAM naar het interne RAM en uitgevoerd. De gebruiker belandt nu in het gekozen programma en enige restanten van de \launcher zijn niet meer beschikbaar. De gebruiker kan ook niet meer terugkeren naar de \launcher en bevindt zich feitelijk in een \basic omgeving.
+
+%
+%
+\subsection{PRG bestanden}
+
+Het opstarten van \prg bestanden is redelijk vergelijkbaar met de procedure voor het opstarten van \cas betanden. Er zijn twee essentiële verschillen. Allereerst worden \prg bestanden per definitie altijd geplaatst in het geheugenblok \pkb{0xA000-0xDCFF}. Deze \prg bestanden hebben hun eigen stack welke aangemaakt worden tijdens het opstarten van het programma en weer opgeruimd wordt bij beëindiging van het programma. Tevens wordt de stack pointer bij het beëindigen van het programma weer geplaatst op de positie van de de oude stack waardoor men terugkeert naar de \launcher.
+
+\begin{figure}[h!]
+    \centering
+
+    \tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=3em, minimum width=6em, rounded corners,
+    text width=4.0cm, align=center]
+
+    \tikzset{every picture/.style=thick}
+    
+    \begin{tikzpicture}[auto, node distance=1.5cm,>=latex']
+        \node [draw, circle, fill=primarycol] (start) {\color{white}START};
+        \node [block, below of=start] (node0) {\ttfamily\faDownload\;BASIC};
+        \node [block, below of=node0] (node1) {\ttfamily\;LAUNCHER\\\faCopy\;ROM $\longmapsto$ eRAM};
+        \node [block, below of=node1] (node2) {\ttfamily \faCogs\;LAUNCHER};
+        \node [block, below of=node2] (node3) {\faMousePointer\;Gebruiker kiest programma};
+        \node [block, below of=node3] (trash1) {\ttfamily \faTrash iRAM};
+        \node [block, below of=trash1] (node4) {\ttfamily PRG\\\faCopy\;SD $\longmapsto$ iRAM\\\pkb{0xA000-0xDCFF}};
+        \node [block, below of=node4] (trash2) {\ttfamily \faTrash iRAM};
+        \coordinate [right=1cm of trash2] (coord);
+           
+        \draw [->] (start) -- (node0);
+        \draw [->] (node0) -- (node1);
+        \draw [->] (node1) -- (node2);
+        \draw [->] (node2) -- (node3);
+        \draw [->] (node3) -- (trash1);
+        \draw [->] (trash1) -- (node4);
+        \draw [->] (node4) -- (trash2);
+        \draw [-] (trash2) -- (coord);
+        \draw [->] (coord) |- (node2);
+    
+    \end{tikzpicture}
+    \caption{Opstartprocedure van \prg bestanden. De betekenis van de symbolen zijn als volgt: \faDownload - opstarten vanaf cartridge, \faCopy \;kopiëren van data, \faCogs \; uitvoeren van machinecode, \faMousePointer \; gebruikersinvoer, \faTrash \; wissen geheugen. iRAM en eRAM staan respectievelijk voor het interne en externe (cartridge) RAM geheugen. ROM staat voor het \sleuf{2} ROM geheugen.}
+    \label{fig:loading-cas-file}
+\end{figure}
 
 %
 %
@@ -88,21 +153,23 @@ Om de SD-kaart in te lezen worden eerst 96 pulsen gestuurd om deze te laten ontw
     \centering
     \tikzstyle{block} = [draw, fill=white, rectangle, 
     minimum height=3em, minimum width=6em, rounded corners]
+    
+    \tikzset{every picture/.style=thick}
 
-    \begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+    \begin{tikzpicture}[auto, node distance=1.5cm,>=latex']
         \node [draw, circle, fill=primarycol] (start) {\color{white}START};
         \node [block, below of=start] (cmd0) {\ttfamily CMD0};
         \node [block, below of=cmd0] (cmd8) {\ttfamily CMD8};
         \node [block, below of=cmd8] (acmd41) {\ttfamily CMD55 + ACMD41};
-        \node [draw, diamond, below of=acmd41] (lees) {Lees \ttfamily 0xFF\normalfont ?};
-        \node [block, below of=lees] (cmd58) {\ttfamily CMD58};
-        \node [draw, circle, below of=cmd58, fill=primarycol] (stop) {\color{white}ACTIEF};
-        \node [block, right of=stop] (cmd17) {\ttfamily CMD17};
-        \node [block, left of=stop] (cmd24) {\ttfamily CMD24};
+        \node [draw, diamond, below=0.5cm of acmd41] (lees) {Lees \ttfamily 0xFF\normalfont ?};
+        \node [block, below= 0.5cm of lees] (cmd58) {\ttfamily CMD58};
+        \node [draw, circle, below=0.5cm of cmd58, fill=primarycol] (stop) {\color{white}ACTIEF};
+        \node [block, right=1.5cm of stop] (cmd17) {\ttfamily CMD17};
+        \node [block, left=1.5cm of stop] (cmd24) {\ttfamily CMD24};
     
         \coordinate [right=0cm and 2cm of lees] (path) {};
-        \coordinate [above=1cm of cmd17] (cmd17t) {};
-        \coordinate [above=1cm of cmd24] (cmd24t) {};
+        \coordinate [above=0.3cm of cmd17] (cmd17t) {};
+        \coordinate [above=0.3cm of cmd24] (cmd24t) {};
     
         \draw [->] (start) -- (cmd0);
         \draw [->] (cmd0) -- (cmd8);
@@ -114,8 +181,8 @@ Om de SD-kaart in te lezen worden eerst 96 pulsen gestuurd om deze te laten ontw
         \draw [->] (cmd58) -- (stop);
         \draw [->] (stop) -- (cmd17);
         \draw [->] (stop) -- (cmd24);
-        \draw [->] (cmd17) -- (cmd17t) -| (stop);
-        \draw [->] (cmd24) -- (cmd24t) -| (stop);
+        \draw [->] (cmd17) -- (cmd17t) -| (stop.north east);
+        \draw [->] (cmd24) -- (cmd24t) -| (stop.north west);
         
     
     \end{tikzpicture}
@@ -193,10 +260,12 @@ Het clusteradres vormt echter enkel het eerste adres van een bestand of subfolde
 %
 %
 %
-\section{CAS bestanden}
+\section{Bestandsformaten}
+
+\subsection{CAS bestanden}
 \label{sec:cas-files}
 
-\pkb{.CAS} bestanden zijn een bestandsformaat bedacht in 1996\footnote{\url{https://www.komkon.org/~dekogel/m2000.html}} door Marcel de Kogel om programma's van \pkb{P2000T} cassettes op te slaan op een moderne(re) computer. Deze bestanden bestanden uit \textbf{blokken} van 1280 bytes (\pkb{0x500}) bytes. Elk \textbf{blok} van \pkb{0x500} bytes is weer opgedeeld in een header van \pkb{0x100} bytes en een data gedeelte van \pkb{0x400} bytes. Deze header is een kopie van het geheugen \pkb{0x6000 - 0x6100} tijdens het wegschrijven van de cartridge. Van dit stukje geheugen blijkt (achteraf) alleen het stukje \pkb{0x6040 - 0x605F} relevant voor de beschrijving van het \pkb{.CAS} bestand. In \cref{tab:cassette-metadata} staat een overzicht van de informatie die in dit geheugenblok opgenomen is.
+\cas bestanden zijn een bestandsformaat bedacht in 1996\footnote{\url{https://www.komkon.org/~dekogel/m2000.html}} door Marcel de Kogel om programma's van \pkb{P2000T} cassettes op te slaan op een moderne(re) computer. Deze bestanden bestanden uit \textbf{blokken} van 1280 bytes (\pkb{0x500}) bytes. Elk \textbf{blok} van \pkb{0x500} bytes is weer opgedeeld in een header van \pkb{0x100} bytes en een data gedeelte van \pkb{0x400} bytes. Deze header is een kopie van het geheugen \pkb{0x6000 - 0x6100} tijdens het wegschrijven van de cartridge. Van dit stukje geheugen blijkt (achteraf) alleen het stukje \pkb{0x6040 - 0x605F} relevant voor de beschrijving van het \cas bestand. In \cref{tab:cassette-metadata} staat een overzicht van de informatie die in dit geheugenblok opgenomen is.
 
 \begin{table}
 \caption{Omschrijving van de relevante data voor een cartridge in geheugenblok \pkb{0x6040 - 0x605F}.}
@@ -222,12 +291,11 @@ Adres & Omschrijving \\
 
 %
 %
-%
-\section{PRG bestanden}
+\subsection{PRG bestanden}
 \label{sec:prg-files}
 
-\pkb{PRG} bestanden zijn speciale machinecode bestanden gemaakt voor de \product. Deze bestanden hebben een 16-byte header, worden op een vaste positie in het geheugen geplaatst en uitgevoerd met een nieuwe stack. De bestanden worden geplaatst op \pkb{0xA000-0xDCFF} en mogen maximaal \pkb{0x3D00} bytes lang zijn.\footnote{Ongeveer 15.25 KiB, net iets minder dan de grootte van een cartridge ROM, welke 16 KiB is.} De stack voor deze bestanden begint op \pkb{0xDEFF} en loopt afwaarts naar \pkb{0xDD00}, hetgeen een stackgrootte van 512 bytes geeft. Voor het draaien van \pkb{PRG} bestanden heeft men tenminste een 16 KiB geheugenuitbreiding nodig. Indien er enkel een 16 KiB geheugenuitbreiding aanwezig is (en niet meer) op de \pkb{P2000T}, dan zal de stack voor \pkb{BASIC} en het menu zich bevinden in \pkb{0xDF00-0xDFFF} waardoor dit stukje geheugen onaangetast moet blijven.
+\prg bestanden zijn speciale machinecode bestanden gemaakt voor de \product. Deze bestanden hebben een 16-byte header, worden op een vaste positie in het geheugen geplaatst en uitgevoerd met een nieuwe stack. De bestanden worden geplaatst op \pkb{0xA000-0xDCFF} en mogen maximaal \pkb{0x3D00} bytes lang zijn.\footnote{Ongeveer 15.25 KiB, net iets minder dan de grootte van een cartridge ROM, welke 16 KiB is.} De stack voor deze bestanden begint op \pkb{0xDEFF} en loopt afwaarts naar \pkb{0xDD00}, hetgeen een stackgrootte van 512 bytes geeft. Voor het draaien van \prg bestanden heeft men tenminste een 16 KiB geheugenuitbreiding nodig. Indien er enkel een 16 KiB geheugenuitbreiding aanwezig is (en niet meer) op de \pkb{P2000T}, dan zal de stack voor \basic en het menu zich bevinden in \pkb{0xDF00-0xDFFF} waardoor dit stukje geheugen onaangetast moet blijven.
 
-De header van de \pkb{PRG} bestanden is vergelijkbaar met de header voor \sleuf{1} cartridges. Het eerste karakter dient altijd een \pkb{0x50} te zijn, corresponderend met de ASCII waarde voor de hoofdletter \pkb{P}. Hierna volgen 2 x 16-bit waarden\footnote{In little-endian notatie, zie \cref{sec:endianness} op Pagina \pageref{sec:endianness}.}, corresponderend met het aantal bytes van het programma gevolgd door de CRC-16 checksum.\footnote{Zie \cref{sec:crc16-checksum} op Pagina \pageref{sec:crc16-checksum} voor meer informatie over CRC-16 checksums.} Deze CRC-16 checksum begint vanaf positie \pkb{0x10}, dus na de 16-byte header. Tenslotte resteren 11 karakters die de gebruiker vrij mag invullen, maar waarvan wordt aangeraden om een 8+3 bestandsnaam te gebruiken.
+De header van de \prg bestanden is vergelijkbaar met de header voor \sleuf{1} cartridges. Het eerste karakter dient altijd een \pkb{0x50} te zijn, corresponderend met de ASCII waarde voor de hoofdletter \pkb{P}. Hierna volgen 2 x 16-bit waarden\footnote{In little-endian notatie, zie \cref{sec:endianness} op Pagina \pageref{sec:endianness}.}, corresponderend met het aantal bytes van het programma gevolgd door de CRC-16 checksum.\footnote{Zie \cref{sec:crc16-checksum} op Pagina \pageref{sec:crc16-checksum} voor meer informatie over CRC-16 checksums.} Deze CRC-16 checksum begint vanaf positie \pkb{0x10}, dus na de 16-byte header. Tenslotte resteren 11 karakters die de gebruiker vrij mag invullen, maar waarvan wordt aangeraden om een 8+3 bestandsnaam te gebruiken.
 
-In tegenstelling tot \pkb{CAS} bestanden keren \pkb{PRG} bestanden wel terug naar het menu wanneer deze afgesloten worden. Om die reden is het programma opgeslagen in de \pkb{PRG} bestanden zelf verantwoordelijk voor het aanmaken en opruimen van de stack en het herpositioneren van de stackpointer \pkb{SP}. Middels de \pkb{Z88dk} toolchain is het echter vrij eenvoudig om dit op te stellen.
+In tegenstelling tot \cas bestanden keren \prg bestanden wel terug naar het menu wanneer deze afgesloten worden. Om die reden is het programma opgeslagen in de \prg bestanden zelf verantwoordelijk voor het aanmaken en opruimen van de stack en het herpositioneren van de stackpointer \pkb{SP}. Middels de \pkb{Z88dk} toolchain is het echter vrij eenvoudig om dit op te stellen.
