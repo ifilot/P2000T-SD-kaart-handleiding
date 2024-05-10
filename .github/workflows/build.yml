@@ -31,9 +31,9 @@ jobs:
   # Handleiding PDF
   build-pdf:
     runs-on: ubuntu-latest
-    options: --user root
     container:
       image: ghcr.io/ifilot/lualatex-debian12:v0.6.0
+      options: --user root
 
     steps:
     - uses: actions/checkout@v3
