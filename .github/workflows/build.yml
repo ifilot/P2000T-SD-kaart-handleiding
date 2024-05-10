@@ -31,6 +31,7 @@ jobs:
   # Handleiding PDF
   build-pdf:
     runs-on: ubuntu-latest
+    permissions: write-all
     container:
       image: ghcr.io/ifilot/lualatex-debian12:v0.6.0
 
