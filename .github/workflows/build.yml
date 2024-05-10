@@ -44,7 +44,7 @@ jobs:
       run: |
         latexmk -pdflatex=lualatex -f -pdf -jobname="p2000t-sdkaart-handleiding-inner" main.tex
         pdfseparate cover/cover.pdf cover-page%d.pdf
-        pdfunit cover-page1.pdf p2000t-sdkaart-handleiding-inner.pdf cover-page2.pdf p2000t-sdkaart-handleiding.pdf
+        pdfunite cover-page1.pdf p2000t-sdkaart-handleiding-inner.pdf cover-page2.pdf p2000t-sdkaart-handleiding.pdf
     - name: Upload launcher
       uses: actions/upload-artifact@v3
       with:
