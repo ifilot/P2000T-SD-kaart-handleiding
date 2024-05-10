@@ -21,6 +21,11 @@ Om de firmware te flashen dient men de volgende stappen te volgen.
     \item Plaatst het bestand \pkb{LAUNCHER.BIN} in de \textbf{hoofdmap} op de SD-kaart. Hiervoor heeft u een (USB) SD-kaart lezer op uw desktop computer of laptop nodig.
     \item Stel de DIP switch aan de voorzijde van de \sleuf{1} cartridge\footnote{Zie ook \cref{fig:cartridge-sleuf1}.} zo in dat de \textbf{linkerpin} naar beneden staat en de \textbf{rechterpin} naar boven.
     \item Zet nu de \pkb{P2000T} aan. Op het beeldscherm zal nu een tekst verschijnen vergelijkbaar met \cref{fig:flasher-boot}.
+    \item Druk nu op een willekeurige toets om de flash procedure te starten. Allereerst zal de Flasher verbinding proberen te maken met de SD-kaart en vervolgens zoeken of er een bestand met de naam \pkb{LAUNCHER.BIN} in de hoofdmap staat. \index{LAUNCHER.BIN}
+    \item Indien dit bestand gevonden wordt, dan zal de cartridge controleren of er een ROM chip in de cartridge zit met een signatuur van \pkb{0xB5BF}, hetgeen overeenkomt met een flash chip van het type \pkb{SST39SF010}.
+    \item Vervolgens wordt het geheugen \pkb{0x0000-0x3FFF} op de cartridge ROM chip gewist om plaats te maken voor de nieuwe firmware routines.
+    \item Tenslotte wordt de nieuwe firmware overgekopieerd van de SD kaart naar de cartridge ROM chip. Het kopiëren duurt ongeveer een seconde en op het beeldscherm valt een teller te zien.
+    \item Na het kopiëren wordt gecontroleerd of de firmware correct is overgezet middels het uitrekenen van een CRC-16 checksum. Deze checksum bevindt zich in de laatste twee bytes van de firmware en heeft een dusdanige waarde dat de gehele CRC-16 checksum uitkomt op \pkb{0x0000}. De laatste twee bytes acteren dus als een soort digitale handtekening. \index{LAUNCHER.BIN!checksum} \index{LAUNCHER.BIN!crc-16} \index{checksum!LAUCHER.BIN} \index{crc-16!LAUNCHER.BIN}
 \end{enumerate}
 
 \begin{figure}[h!]
@@ -29,14 +34,6 @@ Om de firmware te flashen dient men de volgende stappen te volgen.
     \caption{Opstartscherm van de Flasher.}
     \label{fig:flasher-boot}
 \end{figure}
-
-\begin{enumerate}[noitemsep,resume]
-    \item Druk nu op een willekeurige toets om de flash procedure te starten. Allereerst zal de Flasher verbinding proberen te maken met de SD-kaart en vervolgens zoeken of er een bestand met de naam \pkb{LAUNCHER.BIN} in de hoofdmap staat. \index{LAUNCHER.BIN}
-    \item Indien dit bestand gevonden wordt, dan zal de cartridge controleren of er een ROM chip in de cartridge zit met een signatuur van \pkb{0xB5BF}, hetgeen overeenkomt met een flash chip van het type \pkb{SST39SF010}.
-    \item Vervolgens wordt het geheugen \pkb{0x0000-0x3FFF} op de cartridge ROM chip gewist om plaats te maken voor de nieuwe firmware routines.
-    \item Tenslotte wordt de nieuwe firmware overgekopieerd van de SD kaart naar de cartridge ROM chip. Het kopiëren duurt ongeveer een seconde en op het beeldscherm valt een teller te zien.
-    \item Na het kopiëren wordt gecontroleerd of de firmware correct is overgezet middels het uitrekenen van een CRC-16 checksum. Deze checksum bevindt zich in de laatste twee bytes van de firmware en heeft een dusdanige waarde dat de gehele CRC-16 checksum uitkomt op \pkb{0x0000}. De laatste twee bytes acteren dus als een soort digitale handtekening. \index{LAUNCHER.BIN!checksum} \index{LAUNCHER.BIN!crc-16} \index{checksum!LAUCHER.BIN} \index{crc-16!LAUNCHER.BIN}
-\end{enumerate}
 
 Indien alles succesvol is verlopen zal een groene tekst op het beeldscherm verschijnen en ziet men een overzicht van de gehele flashprocedure zoals weergegeven in \cref{fig:flasher-done}.
 
