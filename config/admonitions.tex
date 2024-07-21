@@ -1,0 +1,55 @@
+\usepackage{fontawesome}
+%\usepackage[svgnames]{xcolor}
+%\usepackage{lipsum}
+\usepackage{tcolorbox,marvosym,xstring}
+\newcommand\boxcolor{}
+\newcommand\admonition[3]{%
+    \IfStrEq{#1}{note}{\renewcommand\boxcolor{cornflowerBlue}}{%
+    \IfStrEq{#1}{danger}{\renewcommand\boxcolor{Crimson}}{%
+    \IfStrEq{#1}{warning}{\renewcommand\boxcolor{orange}}{%
+    \IfStrEq{#1}{tip}{\renewcommand\boxcolor{mediumaquamarine}}{%
+    \IfStrEq{#1}{tryitout}{\renewcommand\boxcolor{yellowgreen}}{%
+}}}}}
+\IfStrEq{#1}{note}{
+    \begin{tcolorbox}[colback=\boxcolor!15!white,          
+        colframe=\boxcolor,
+        title=\faInfoCircle\sffamily\bfseries\; #2]
+        #3
+    \end{tcolorbox}
+}{
+\IfStrEq{#1}{danger}{
+    \begin{tcolorbox}[colback=\boxcolor!15!white,          
+        colframe=\boxcolor,
+        title=\faFlash\sffamily\bfseries\; #2]
+        #3
+    \end{tcolorbox}
+}{
+\IfStrEq{#1}{warning}{
+    \begin{tcolorbox}[colback=\boxcolor!15!white,          
+        colframe=\boxcolor,
+        title=\faExclamationTriangle\sffamily\bfseries\; #2]
+        #3
+    \end{tcolorbox}
+}{
+\IfStrEq{#1}{tip}{
+    \begin{tcolorbox}[colback=\boxcolor!15!white,          
+        colframe=\boxcolor,
+        title=\faGittip\sffamily\bfseries\; #2]
+        #3
+    \end{tcolorbox}
+}{
+\IfStrEq{#1}{tryitout}{
+    \begin{tcolorbox}[colback=\boxcolor!15!white,          
+        colframe=\boxcolor,
+        title=\faCode\sffamily\bfseries\; #2]
+        #3
+    \end{tcolorbox}
+}}}}}
+}% end of admonition definition
+
+\newcommand\tryitout[2]{%
+    \admonition{tryitout}{Try it Out}{%
+    \textbf{#1} \vspace{1em} \\
+    #2
+    }
+}
